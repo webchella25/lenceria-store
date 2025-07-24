@@ -24,3 +24,20 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Estilos personalizados adicionales */
+.container {
+  max-width: 1200px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Backdrop blur support check */
+@supports (backdrop-filter: blur(8px)) {
+  .backdrop-blur {
+    backdrop-filter: blur(8px);
+  }
+}
