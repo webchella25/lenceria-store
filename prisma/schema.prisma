@@ -1,0 +1,272 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ma/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// MODELO DE USUARIO
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?
+  role          Role      @default(CUSTOMER)
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relaciones
+  accounts Account[]
+  sessions Session[]
+  pedidos  Pedido[]
+  reviews  Review[]
+  wishlist WishlistItem[]
+
+  @@map("users")
+}
+
+// MODELO DE CUENTA (NextAuth)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+// MODELO DE SESIÓN (NextAuth)
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// MODELO DE TOKEN DE VERIFICACIÓN
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+// MODELO DE CATEGORÍA
+model Categoria {
+  id          String     @id @default(cuid())
+  nombre      String     @unique
+  slug        String     @unique
+  descripcion String?
+  imagen      String?
+  activa      Boolean    @default(true)
+  orden       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relaciones
+  productos Producto[]
+
+  @@map("categorias")
+}
+
+// MODELO DE PRODUCTO
+model Producto {
+  id                String   @id @default(cuid())
+  nombre            String
+  slug              String   @unique
+  descripcion       String?
+  descripcionCorta  String?
+  precio            Float
+  precioOferta      Float?
+  sku               String?  @unique
+  codigoLoveCherry  String?  @unique
+  stock             Int      @default(0)
+  activo            Boolean  @default(true)
+  destacado         Boolean  @default(false)
+  nuevo             Boolean  @default(false)
+  genero            Genero   @default(MUJER)
+  tallas            String[] // JSON array de tallas disponibles
+  colores           String[] // JSON array de colores disponibles
+  materiales        String[] // JSON array de materiales
+  cuidados          String?
+  peso              Float?
+  dimensiones       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relaciones
+  categoria     Categoria      @relation(fields: [categoriaId], references: [id])
+  categoriaId   String
+  imagenes      ProductoImagen[]
+  pedidoItems   PedidoItem[]
+  reviews       Review[]
+  wishlistItems WishlistItem[]
+
+  @@map("productos")
+}
+
+// MODELO DE IMÁGENES DE PRODUCTO
+model ProductoImagen {
+  id        String  @id @default(cuid())
+  url       String
+  altText   String?
+  orden     Int     @default(0)
+  principal Boolean @default(false)
+
+  // Relaciones
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  productoId String
+
+  @@map("producto_imagenes")
+}
+
+// MODELO DE PEDIDO
+model Pedido {
+  id              String        @id @default(cuid())
+  numero          String        @unique
+  estado          EstadoPedido  @default(PENDIENTE)
+  subtotal        Float
+  descuento       Float         @default(0)
+  envio           Float         @default(0)
+  total           Float
+  metodoPago      String?
+  stripePaymentId String?
+  notas           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Datos de envío
+  nombreEnvio     String
+  emailEnvio      String
+  telefonoEnvio   String?
+  direccionEnvio  String
+  ciudadEnvio     String
+  cpEnvio         String
+  provinciaEnvio  String
+  paisEnvio       String        @default("España")
+
+  // Relaciones
+  usuario   User?        @relation(fields: [usuarioId], references: [id])
+  usuarioId String?
+  items     PedidoItem[]
+
+  @@map("pedidos")
+}
+
+// MODELO DE ITEM DE PEDIDO
+model PedidoItem {
+  id       String @id @default(cuid())
+  cantidad Int
+  precio   Float
+  talla    String?
+  color    String?
+
+  // Relaciones
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  pedidoId   String
+  producto   Producto @relation(fields: [productoId], references: [id])
+  productoId String
+
+  @@map("pedido_items")
+}
+
+// MODELO DE REVIEW/OPINIÓN
+model Review {
+  id          String   @id @default(cuid())
+  puntuacion  Int      // 1-5 estrellas
+  titulo      String?
+  comentario  String?
+  verificada  Boolean  @default(false)
+  activa      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  usuario    User     @relation(fields: [usuarioId], references: [id])
+  usuarioId  String
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  productoId String
+
+  @@unique([usuarioId, productoId])
+  @@map("reviews")
+}
+
+// MODELO DE LISTA DE DESEOS
+model WishlistItem {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  usuario    User     @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuarioId  String
+  producto   Producto @relation(fields: [productoId], references: [id], onDelete: Cascade)
+  productoId String
+
+  @@unique([usuarioId, productoId])
+  @@map("wishlist_items")
+}
+
+// MODELO DE BLOG POST
+model BlogPost {
+  id            String   @id @default(cuid())
+  titulo        String
+  slug          String   @unique
+  extracto      String?
+  contenido     String
+  imagenPortada String?
+  publicado     Boolean  @default(false)
+  fechaPublish  DateTime?
+  seoTitle      String?
+  seoDescription String?
+  tags          String[] // Array de tags
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("blog_posts")
+}
+
+// ENUMS
+enum Role {
+  CUSTOMER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum Genero {
+  MUJER
+  HOMBRE
+  UNISEX
+}
+
+enum EstadoPedido {
+  PENDIENTE
+  CONFIRMADO
+  PROCESANDO
+  ENVIADO
+  ENTREGADO
+  CANCELADO
+  DEVUELTO
+}
