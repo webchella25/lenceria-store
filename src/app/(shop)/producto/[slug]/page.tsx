@@ -1,51 +1,18 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { prisma } from "@/lib/db"
 import { Card, CardContent } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
 import { formatPrice } from "@/lib/utils"
 import Link from "next/link"
-import { notFound } from "next/navigation"
 import AddToCartButton from "@/components/carrito/AddToCartButton"
 
-interface PageProps {
-  params: {
-    slug: string
-  }
+interface ProductoPageClientProps {
+  producto: any
 }
 
-async function getProducto(slug: string) {
-  try {
-    const producto = await prisma.producto.findUnique({
-      where: { slug, activo: true },
-      include: {
-        categoria: true,
-        imagenes: {
-          orderBy: { orden: "asc" }
-        }
-      }
-    })
-
-    return producto
-  } catch (error) {
-    console.error("Error fetching producto:", error)
-    return null
-  }
-}
-
-export default async function ProductoPage({ params }: PageProps) {
-  const producto = await getProducto(params.slug)
-
-  if (!producto) {
-    notFound()
-  }
-
-  return <ProductoPageClient producto={producto} />
-}
-
-function ProductoPageClient({ producto }: { producto: any }) {
+export default function ProductoPageClient({ producto }: ProductoPageClientProps) {
   const [selectedTalla, setSelectedTalla] = useState<string>("")
   const [selectedColor, setSelectedColor] = useState<string>("")
 
