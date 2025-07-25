@@ -7,10 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "db:seed": "tsx prisma/seed.ts",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset && npm run db:seed"
   },
   "dependencies": {
@@ -40,6 +41,7 @@
     "react-dom": "19.1.0",
     "react-email": "^4.2.4",
     "react-hook-form": "^7.61.1",
+    "react-hot-toast": "^2.5.2",
     "resend": "^4.7.0",
     "sharp": "^0.34.3",
     "stripe": "^18.3.0",
