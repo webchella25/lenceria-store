@@ -29,19 +29,19 @@ export default function ProductCard({ producto, className }: ProductCardProps) {
       <Link href={`/producto/${producto.slug}`} className="block relative">
         <div className="aspect-square overflow-hidden bg-accent-50">
           {imagenPrincipal ? (
-            <Image
-              src={imagenPrincipal.url}
-              alt={imagenPrincipal.altText || producto.nombre}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          ) : (
-            // Placeholder si no hay imagen
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent-50 to-accent-100">
-              <span className="text-4xl text-primary">🌹</span>
-            </div>
-          )}
+  <Image
+    src={imagenPrincipal.url}
+    alt={imagenPrincipal.altText || producto.nombre}
+    fill
+    className="object-cover transition-transform duration-300 group-hover:scale-105"
+    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+  />
+) : (
+  // Placeholder si no hay imagen - SIN fetch de imagen externa
+  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-accent-50 to-accent-100">
+    <span className="text-4xl text-primary">🌹</span>
+  </div>
+)}
         </div>
 
         {/* Badges superpuestos */}

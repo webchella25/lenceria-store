@@ -1,49 +1,48 @@
+// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#D4336A',
-          50: '#FDF2F8',
-          100: '#FCE7F3', 
-          500: '#D4336A',
-          600: '#B8295A',
-          700: '#9F1E4E',
-          900: '#701A75',
+          DEFAULT: '#ec4899', // pink-500
+          50: '#fdf2f8',
+          100: '#fce7f3',
+          200: '#fbcfe8',
+          300: '#f9a8d4',
+          400: '#f472b6',
+          500: '#ec4899',
+          600: '#db2777',
+          700: '#be185d',
+          800: '#9d174d',
+          900: '#831843',
         },
         secondary: {
-          DEFAULT: '#2D2D2D',
-          50: '#F9FAFB',
-          100: '#F3F4F6',
-          200: '#E5E7EB',
-          500: '#6B7280',
-          600: '#6B7280',
+          DEFAULT: '#6b7280', // gray-500
+          50: '#f9fafb',
+          100: '#f3f4f6',
+          200: '#e5e7eb',
+          300: '#d1d5db',
+          400: '#9ca3af',
+          500: '#6b7280',
+          600: '#4b5563',
           700: '#374151',
-          800: '#2D2D2D',
-          900: '#1F2937',
+          800: '#1f2937',
+          900: '#111827',
         },
         accent: {
-          DEFAULT: '#F4C2C2',
-          50: '#FEF7F7',
-          100: '#F4C2C2',
-          200: '#FECACA',
-        },
-      },
-      container: {
-        center: true,
-        padding: '2rem',
-        screens: {
-          '2xl': '1400px',
-        },
+          DEFAULT: '#fdf2f8', // pink-50
+          50: '#fdf2f8',
+          100: '#fce7f3',
+          200: '#fbcfe8',
+        }
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 }

@@ -21,7 +21,7 @@ export default function MiniCart() {
         <span className="text-xl">🛒</span>
         {summary.itemsCount > 0 && (
           <Badge 
-            variant="primary" 
+            variant="destructive"
             className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs"
           >
             {summary.itemsCount}
@@ -105,35 +105,28 @@ export default function MiniCart() {
                     <div className="flex justify-between text-sm">
                       <span>Envío:</span>
                       <span>
-                        {summary.envio === 0 ? 'GRATIS' : `€${summary.envio.toFixed(2)}`}
+                        {summary.envio === 0 ? 'Gratis' : `€${summary.envio.toFixed(2)}`}
                       </span>
                     </div>
-                    <div className="flex justify-between font-semibold text-lg border-t pt-2">
+                    <div className="flex justify-between font-semibold text-base border-t border-secondary-200 pt-2">
                       <span>Total:</span>
                       <span>€{summary.total.toFixed(2)}</span>
                     </div>
                   </div>
 
-                  {/* Botones de acción */}
-                  <div className="space-y-2 mt-4">
-                    <Link href="/carrito" className="block">
+                  {/* Acciones */}
+                  <div className="flex gap-2 mt-4">
+                    <Link href="/carrito" className="flex-1">
                       <Button variant="outline" className="w-full" onClick={toggleCart}>
                         Ver Carrito
                       </Button>
                     </Link>
-                    <Link href="/checkout" className="block">
+                    <Link href="/checkout" className="flex-1">
                       <Button className="w-full" onClick={toggleCart}>
-                        Finalizar Compra
+                        Finalizar
                       </Button>
                     </Link>
                   </div>
-
-                  {/* Envío gratis reminder */}
-                  {summary.subtotal < 50 && (
-                    <div className="mt-3 p-2 bg-primary-50 rounded text-xs text-center">
-                      🚚 Añade €{(50 - summary.subtotal).toFixed(2)} más para envío gratuito
-                    </div>
-                  )}
                 </>
               )}
             </div>

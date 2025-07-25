@@ -1,3 +1,4 @@
+// src/app/layout.tsx
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
@@ -19,7 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${inter.className} antialiased`}>
+      <body 
+        className={`${inter.className} antialiased`}
+        suppressHydrationWarning={true}
+      >
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-grow">
