@@ -50,3 +50,4 @@ coverage/
 # Uploads
 uploads/
 temp/" > .gitignore
+.vercel
